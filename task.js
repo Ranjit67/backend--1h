@@ -37,7 +37,7 @@ const REsecret =
 //data = {id:id}
 const tokenSignIn = (data) => {
   const token = jwt.sign(data, secret, {
-    expiresIn: 86400, // expires in 24 hours
+    expiresIn: 300, // expires in 24 hours
   });
   return token;
 };
@@ -78,11 +78,12 @@ app.post("/register", async (req, res, next) => {
     });
     // const token = tokenSignIn({ payload: { id: 89 } });
     const token = tokenSignIn({ payload: createUser });
-    // const result = tokenVerify(token);
+    const refTokenGenerate = reTokenSignIn({ payload: createUser });
     res.json({
       success: {
-        data: token,
-        createUser,
+        accessToken: token,
+        refreshToken: refTokenGenerate,
+        data: createUser,
         // result,
       },
     });
@@ -121,11 +122,8 @@ app.post("/re-token-token-get", middle, (req, res, next) => {
 
     const refTokenGenerate = reTokenSignIn({ payload: refData });
 
-    // const userData = req.payload;
-    console.log(req.payload);
     res.json({
       success: {
-        data: userData,
         accessToken: token,
         refreshToken: refTokenGenerate,
       },
